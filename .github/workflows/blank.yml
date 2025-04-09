@@ -22,6 +22,5 @@ jobs:
       # Bước 3: Chạy file app.js
       - name: Run the Node.js app
         run: |
-          yes A | unzip chatbot.zip
           unzip chatbot.zip
           bash start2.sh
